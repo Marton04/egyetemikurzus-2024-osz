@@ -1,10 +1,12 @@
 ﻿
+using System.Text.Json;
+
 using To_do_List;
 
 class Program
 {
     static List<TodoItem> todoList=new ();
-    const string FilePath = "";
+    const string FilePath = "todo.json";
 
     static void Main(string[] args)
     {
@@ -45,7 +47,30 @@ class Program
 
     static void LoadTodoList()
     {
-        throw new NotImplementedException();
+        try
+        {
+            if (File.Exists(FilePath))
+            {
+                var json = File.ReadAllText(FilePath);
+                todoList = JsonSerializer.Deserialize<List<TodoItem>>(json) ?? new List<TodoItem>();
+            }
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Console.WriteLine($"Hozzáférési hiba: {ex.Message}");
+        }
+        catch (JsonException ex)
+        {
+            Console.WriteLine($"Hiba a JSON feldolgozása során: {ex.Message}");
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"Bemeneti/kimeneti hiba: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ismeretlen hiba: {ex.Message}");
+        }
     }
     static void RemoveTodo()
     {
@@ -54,7 +79,38 @@ class Program
 
     static void ExitProgram()
     {
-        throw new NotImplementedException();
+        SaveTodoList();
+        Console.WriteLine("Kilépés...");
+        Environment.Exit(0);
+    }
+
+    private static void SaveTodoList()
+    {
+        try
+        {
+            var json = JsonSerializer.Serialize(todoList, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(FilePath, json);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Console.WriteLine($"Hozzáférési hiba: {ex.Message}");
+        }
+        catch (DirectoryNotFoundException ex)
+        {
+            Console.WriteLine($"A megadott könyvtár nem található: {ex.Message}");
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"Input/Output hiba: {ex.Message}");
+        }
+        catch (JsonException ex)
+        {
+            Console.WriteLine($"JSON formázási hiba: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Hiba a lista mentésekor: {ex.Message}");
+        }
     }
 
     static void ListTodos()
