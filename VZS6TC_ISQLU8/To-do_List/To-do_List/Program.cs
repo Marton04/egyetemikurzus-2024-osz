@@ -118,8 +118,110 @@ class Program
 
     static void ListTodos()
     {
-        throw new NotImplementedException();
+        Console.Clear();
+        Console.WriteLine("Teendők listázása");
+        Console.WriteLine("==================");
+
+        var filteredTodos = GetFilteredTodos();
+        var sortedTodos = SortTodos(filteredTodos);
+        DisplayTodos(sortedTodos, "Szűrt és rendezett teendők listája");
     }
+
+    static List<TodoItem> GetFilteredTodos()
+    {
+        Console.WriteLine("Mit szeretnél megjeleníteni?");
+        Console.WriteLine("1 - Az összes teendőt");
+        Console.WriteLine("2 - Csak egy adott kategória teendőit");
+        Console.Write("Választás: ");
+
+        var selection = Console.ReadLine();
+
+        if (selection == "1")
+        {
+            return todoList;
+        }
+        else if (selection == "2")
+        {
+            return GetFilteredTodosByCategory();
+        }
+        else
+        {
+            Console.WriteLine("Érvénytelen választás. Nyomj egy gombot a visszatéréshez.");
+            Console.ReadKey();
+            return new List<TodoItem>();
+        }
+    }
+
+    private static List<TodoItem> GetFilteredTodosByCategory()
+    {
+        Console.WriteLine("Válaszd ki a kategóriát:");
+        var categoriesList = categories.ToList();
+        for (int i = 0; i < categoriesList.Count; i++)
+        {
+            Console.WriteLine($"{i + 1} - {categoriesList[i]}");
+        }
+
+        Console.Write("Választás: ");
+        if (!int.TryParse(Console.ReadLine(), out var categoryChoice) || categoryChoice <= 0 || categoryChoice > categoriesList.Count)
+        {
+            Console.WriteLine("Érvénytelen választás.");
+            Console.WriteLine("Nyomj egy gombot a folytatáshoz...");
+            Console.ReadKey();
+            return GetFilteredTodosByCategory(); // Újra bekérés
+        }
+        else
+        {
+            return todoList
+            .Where(todo => todo.Category.Equals(categoriesList[categoryChoice-1], StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        }
+    }
+
+    static List<TodoItem> SortTodos(List<TodoItem> todos)
+    {
+        Console.WriteLine("Hogyan szeretnéd rendezni a teendőket?");
+        Console.WriteLine("1 - Határidő szerint");
+        Console.WriteLine("2 - Prioritás szerint");
+        Console.WriteLine("3 - Alapértelmezett sorrendben");
+        Console.Write("Választás: ");
+
+        var sortOption = Console.ReadLine();
+
+        return sortOption switch
+        {
+            "1" => todos.OrderBy(todo => todo.Deadline).ToList(),
+            "2" => todos.OrderByDescending(todo => todo.Priority).ToList(),
+            "3" => todos, // Alapértelmezett sorrendben hagyjuk
+            _ => todos // Ha érvénytelen a bemenet, szintén alapértelmezett sorrend
+        };
+    }
+
+    static void DisplayTodos(List<TodoItem> todos, string title)
+    {
+        Console.Clear();
+        Console.WriteLine(title);
+        Console.WriteLine("====================");
+
+        if (todos.Count == 0)
+        {
+            Console.WriteLine("Nincsenek megjeleníthető teendők.");
+        }
+        else
+        {
+            foreach (var todo in todos)
+            {
+                Console.WriteLine($"- Leírás: {todo.Description}");
+                Console.WriteLine($"  Határidő: {todo.Deadline:yyyy-MM-dd}");
+                Console.WriteLine($"  Prioritás: {todo.Priority}");
+                Console.WriteLine($"  Kategória: {todo.Category}");
+                Console.WriteLine();
+            }
+        }
+
+        Console.WriteLine("Nyomj egy gombot a visszatéréshez...");
+        Console.ReadKey();
+    }
+
 
     static void AddTodo()
     {
