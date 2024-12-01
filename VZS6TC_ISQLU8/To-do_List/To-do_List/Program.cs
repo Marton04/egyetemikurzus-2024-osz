@@ -77,7 +77,36 @@ class Program
     }
     static void RemoveTodo()
     {
-        throw new NotImplementedException();
+        Console.Clear();
+        Console.WriteLine("Teendő törlése");
+        Console.WriteLine("===============");
+
+        Console.Write("Add meg a törlendő teendő leírását: ");
+        var descriptionToRemove = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(descriptionToRemove))
+        {
+            Console.WriteLine("A leírás nem lehet üres.");
+            Console.WriteLine("Nyomj egy gombot a visszatéréshez...");
+            Console.ReadKey();
+            return;
+        }
+
+        var todoToRemove = todoList.FirstOrDefault(todo => todo.Description.Equals(descriptionToRemove, StringComparison.OrdinalIgnoreCase));
+
+        if (todoToRemove != null)
+        {
+            todoList.Remove(todoToRemove);
+            SaveTodoList();
+            Console.WriteLine("A teendő sikeresen törölve!");
+        }
+        else
+        {
+            Console.WriteLine("Nem található ilyen leírással rendelkező teendő.");
+        }
+
+        Console.WriteLine("Nyomj egy gombot a visszatéréshez...");
+        Console.ReadKey();
     }
 
     static void ExitProgram()
