@@ -196,7 +196,7 @@ class Program
             Console.WriteLine("Érvénytelen választás.");
             Console.WriteLine("Nyomj egy gombot a folytatáshoz...");
             Console.ReadKey();
-            return GetFilteredTodosByCategory(); // Újra bekérés
+            return GetFilteredTodosByCategory();
         }
         else
         {
@@ -220,8 +220,8 @@ class Program
         {
             "1" => todos.OrderBy(todo => todo.Deadline).ToList(),
             "2" => todos.OrderByDescending(todo => todo.Priority).ToList(),
-            "3" => todos, // Alapértelmezett sorrendben hagyjuk
-            _ => todos // Ha érvénytelen a bemenet, szintén alapértelmezett sorrend
+            "3" => todos, 
+            _ => todos
         };
     }
 
@@ -281,7 +281,7 @@ class Program
             Console.WriteLine("A leírás nem lehet üres.");
             Console.WriteLine("Nyomj egy gombot a folytatáshoz...");
             Console.ReadKey();
-            return GetDescription(); // Újra bekérés
+            return GetDescription();
         }
         return description;
     }
@@ -307,7 +307,7 @@ class Program
             Console.WriteLine("A prioritásnak 1 és 5 közötti számnak kell lennie.");
             Console.WriteLine("Nyomj egy gombot a folytatáshoz...");
             Console.ReadKey();
-            return GetPriority(); // Újra bekérés
+            return GetPriority();
         }
         return priority;
     }
@@ -328,7 +328,7 @@ class Program
             Console.WriteLine("Érvénytelen választás.");
             Console.WriteLine("Nyomj egy gombot a folytatáshoz...");
             Console.ReadKey();
-            return GetCategory(); // Újra bekérés
+            return GetCategory();
         }
 
         if (categoryChoice == 0)
@@ -347,10 +347,10 @@ class Program
             Console.WriteLine("A kategória neve nem lehet üres.");
             Console.WriteLine("Nyomj egy gombot a folytatáshoz...");
             Console.ReadKey();
-            return AddNewCategory(); // Újra bekérés
+            return AddNewCategory();
         }
 
-        if (!categories.Add(category)) // Ha már létezik, nem kerül újra hozzáadásra
+        if (!categories.Add(category))
         {
             Console.WriteLine("Ez a kategória már létezik.");
         }
