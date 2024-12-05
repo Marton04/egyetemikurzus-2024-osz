@@ -79,5 +79,23 @@ namespace TodoList.Tests
                 });
             }
         }
+        [Test]
+        public void TodoItem_EmptyCategory_ShouldThrowArgumentException()
+        {
+
+            var description = "Test description";
+            var deadline = DateTime.Now;
+            var priority = 3;
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var todoItem = new TodoItem(description, deadline, priority, string.Empty);
+            });
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var todoItem = new TodoItem(description, deadline, priority, "   ");
+            });
+        }
     }
 }
